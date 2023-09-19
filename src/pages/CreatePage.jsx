@@ -1,31 +1,35 @@
 import { useState } from "react";
-import {useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const CreatePage = () => {
   const [body, setBody] = useState("");
   const [title, setTitle] = useState("");
   const navigate = useNavigate();
-  const handlePost = (title, body) => {
-    axios({
+
+  const handlePost = async (title, body) => {
+    try {
+      const response = await fetch('https://dummyjson.com/posts/add', {
         method: 'POST',
-        url: 'https://dummyjson.com/posts/add',
-        data: {
-            title: title,
-            body: body,
-            userId: 1,
-            tags: [],
-            reactions: Number
+        headers: {
+          'Content-Type': 'application/json', // Установите правильный заголовок Content-Type
         },
-    })
-    .then((response) => {
-        if (response.status === 200) {
-          navigate('/posts');
-        }
-      })
-      .catch((error) => {
-        console.error('Ошибка:', error);
+        body: JSON.stringify({
+          title: title,
+          body: body,
+          userId: 1,
+          tags: [],
+          reactions: 0, // Установите значение числового поля
+        }),
       });
+
+      if (response.status === 200) {
+        navigate('/posts');
+      } else {
+        console.error('Ошибка:', response.status);
+      }
+    } catch (error) {
+      console.error('Ошибка:', error);
+    }
   }
 
   return (
@@ -42,7 +46,7 @@ export const CreatePage = () => {
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
-        <button onClick={handlePost}>Post</button>
+        <button onClick={() => handlePost(title, body)}>Post</button>
       </div>
     </>
   );
