@@ -18,24 +18,15 @@ export const CreatePage = () => {
             reactions: Number
         },
     })
-    navigate('/posts')
-    
+    .then((response) => {
+        if (response.status === 200) {
+          navigate('/posts');
+        }
+      })
+      .catch((error) => {
+        console.error('Ошибка:', error);
+      });
   }
-//   const handlePost = async(title, body) => {
-//     const response = await fetch('https://dummyjson.com/posts/add', {
-//         method: 'POST',
-//         headers: { 'Content-Type': 'application/json' },
-//         body: JSON.stringify({
-//             title: title,   
-//             body: body,
-//             userId: 5,
-//             tags: [1,2,3],
-//             reactions: null
-//         })
-//         .then(resp => resp.json())
-//         .then(console.log(response.data))
-//     })
-//   };
 
   return (
     <>
